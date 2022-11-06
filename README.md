@@ -49,6 +49,7 @@ ipfsLinkGenereator.py : Uploads details of the Product to IPFS using Moralis API
 
 For the purpose of this application, the token ID should be enetered in sequence. 0 for first token, 1 for second, etc.
 It is using a zero-based indexing.
+(Note: Token for 0 has already been created)
 
 app3.py : Creates an executable file
 test.sol : Smart Contract written in Solidity using Web3 Technology. Contains the main instructions for the application. 
