@@ -59,3 +59,10 @@ ipfsLinkGenereator.py : Uploads details of the Product to IPFS using Moralis API
 
 For the purpose of this application, the token ID should be enetered in sequence. 0 for first token, 1 for second, etc.
 It is using a zero-based indexing.
+
+**Private Keys**
+0xF617EDcaB89f694112e60C7ba532E21267f38E5d (Owner of the contract)
+Private Key: cc23b7b1c893d75f285a7cf6c6837d450970ba6bf20b2995a4fe0699619e0ca9
+0xE8f3A36c88aD10F9247F82673d6F7079385F167C
+Private Key: 52f64174cc2dda6c9a2191598be8fc489f25ac4c024fba308bd9bdb5ef99c657
+
