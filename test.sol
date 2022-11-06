@@ -8,44 +8,76 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract veracity is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable 
 {
-    mapping(address=>int) public rating;
-    mapping(address=>int) public count;
-    mapping(address=>uint) public lastSold;
-    constructor() ERC721("Veracity", "VRCTY") 
-    {}
+    mapping(address=>int) public rating; //Seller => Rating
+    mapping(address=>int) public count; //Seller => no of times rated
+    mapping(address=>uint) public lastSold; //Seller => time
+    mapping(address=>address[]) public ratingQueue; //Buyer => Seller
 
-    function safeMint(address to, uint256 tokenId, string memory uri)public onlyOwner
+    uint token;
+    address own;
+    constructor() ERC721("Veracity", "VRCTY") 
     {
-        _safeMint(to, tokenId);
-        _setTokenURI(tokenId, uri);
+        token=0;
+        own=msg.sender;
+    }
+
+    function safeMint(string memory uri)public onlyOwner
+    {
+        _safeMint(own, token);
+        _setTokenURI(token, uri);
+        token+=1;
     }
 
     //Enter rating -1 if user does not want to rate it
-    function transferFromNew(address _from,address _to, uint256 _tokenId,int rate) public
+    function transferFromNew(address _from,address _to, uint256 _tokenId) public
     {
-        uint last_block_time=block.timestamp;
-        require(rate>=-1 && rate<=5);
+        //require(rate>=-1 && rate<=5);
+
         require(_from==msg.sender);
+
+        uint last_block_time=block.timestamp;
         require(lastSold[_from]==0 || lastSold[_from]+100<last_block_time);
+
         transferFrom(_from,_to,_tokenId);
+
         lastSold[_to]=last_block_time;
-        //require(b);
-        if(rate!=-1)
+
+        ratingQueue[_to].push(_from);
+        /*if(rate!=-1)
         {
             int temp_rating= rating[_from];
             rating[msg.sender]=(temp_rating+rate)/(count[msg.sender]+1);
             count[msg.sender]++;
+        }*/
+    }
+
+    function giveRating(address seller,int rate) public 
+    {
+        require(ratingQueue[msg.sender].length>0);
+        uint l=ratingQueue[msg.sender].length;
+        bool b=false;
+        uint i;
+        for( i=0;i<uint(l);i++)
+        {
+            if(ratingQueue[msg.sender][i]==seller)
+            {
+                b=true;
+                break;
+            }
         }
-    }
 
-    function time() public view returns (uint)
-    {
-        return block.timestamp;
-    }
+        require(b==true);
 
-    function soldTime(address seller) public view returns(uint)
-    {
-        return lastSold[seller];
+        int temp_rating=rating[seller];
+        rating[seller]=(temp_rating+rate)/(count[seller]+1);
+        count[seller]++;
+
+        for(uint j=i+1;j<l;j++)
+        {
+            ratingQueue[msg.sender][j-1]=ratingQueue[msg.sender][j];
+        }
+        ratingQueue[msg.sender].pop();
+
     }
 
     function getRating(address seller) public view returns(int)
