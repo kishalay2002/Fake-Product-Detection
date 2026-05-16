@@ -19,7 +19,7 @@ def generate_ipfs_link():
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
-        "X-API-Key": "nWkZ3bH2CqwtE2oyO1o7KP35eeGZLVrXWNa2BInrA6VdUz3eo7sstBl4p565KSJy"
+        "X-API-Key": <MORALIS API KEY>
     }
 
     response = requests.post(url,json=payload, headers=headers)
